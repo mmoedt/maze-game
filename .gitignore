@@ -1,5 +1,8 @@
-node_modules
+## Note: Running chrome in this directory from CLI on my system creates this directory:
 google-chrome
+
+## Note: These entries come from create-react-app:
+##
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
