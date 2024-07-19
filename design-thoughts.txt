@@ -50,3 +50,20 @@ This will need to be taken care of at some point; let's get locally working firs
   -> Seems to work fine! Gives me a react welcome page
 
 -> auto-updating doesn't seem to work, I'm not sure if that's expected.  I'm fine with rerunning the server after updates
+
+-> Okay, accomplished: - Should be able to run locally without the first dev's help
+
+- Idea: For testing while developing, I want to make sure I'm representing the map correctly and navigation and orientation is working
+  - So I want to get a 2d map working *first*, before the 3d rendering aspect, to speed up basic development
+     despite it being an optional feature as a mini-map, I think this will really help me develop this
+
+-> okay, the 2d minimap is starting to take too long, and it's not part of required functionality, so I'm going to abandon this effort!
+  - it's best to go through the canvas docs and start rendering routines for the walls that are visible (start with just the current room first)
+
+Thoughts..
+  - Need to be able to set up a canvas and draw lines using the specified start and end coordinates ..
+    - just draw based on a set of if or case statements, based on which directions are available
+
+- react-canvas-draw doesn't seem to fit at all what I want.. looking at the demo page, it doesn't show any line drawing
+- I found a simple example project at: https://stackblitz.com/edit/draw-line-canvas-react?file=index.js
+  which might not be ideal, but should work to start with
