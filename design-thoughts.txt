@@ -1,0 +1,22 @@
+Step 1: Read instructions clearly to understand the scope and the requirements
+
+-> There are a number of bonus options,
+   so we want an iterative approach and get the basics running first,
+   then add features as time permits
+
+-> First thing I want to do is get the dev infrastructure set up;
+   don't want to fail at the end because this is holding me up
+   - I haven't used github actions before, but this should be simple, and have easy to find examples
+   - It looks like it's a fully client-side react app to start, so it's just hosting some static files
+
+- I haven't programmed any games like this in the past, but it seems simple enough that I should be able to accomplish this
+
+-> took notes and noted thoughts while going through the instructions..
+
+
+Step 2: a. Set up code project in github, b. set up basic react app, c. get it deployable
+
+- found https://docs.github.com/en/actions/quickstart
+- created repo in my github account
+- creating basic script to run locally, with basic html page target (not yet generating)
+
