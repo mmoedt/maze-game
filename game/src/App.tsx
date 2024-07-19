@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { drawRoomsView, drawTestLines } from './roomView';
+// import ArrowKeysReact from 'arrow-keys-react';
 
 const WIDTH = 600;
 const HEIGHT = 370;
@@ -24,6 +25,21 @@ function App() {
         element.height = HEIGHT;
 
         ctx = element.getContext('2d');
+
+        // ArrowKeysReact.config({
+        //     left: () => {
+        //       console.log('left key detected.');
+        //     },
+        //     right: () => {
+        //       console.log('right key detected.');
+        //     },
+        //     up: () => {
+        //       console.log('up key detected.');
+        //     },
+        //     down: () => {
+        //       console.log('down key detected.');
+        //     }
+        //   });
     }, []);
 
     useEffect(() => {
@@ -39,6 +55,7 @@ function App() {
           Greetings, fellow travelers.  Please prepare for the Maze Game!!
         </p>
         <canvas ref={canvas}></canvas>
+        {/* <div {...ArrowKeysReact.events} tabIndex="1"></div> */}
       </header>
     </div>
   );
