@@ -19,4 +19,17 @@ Step 2: a. Set up code project in github, b. set up basic react app, c. get it d
 - found https://docs.github.com/en/actions/quickstart
 - created repo in my github account
 - creating basic script to run locally, with basic html page target (not yet generating)
+-> first push to repo; verified I can update the repo and an initial script (mentioned in README) works fine
+
+b. basic react app..  using: npx create-react-app ${APP_NAME} --template typescript
+
+* I want to use a project-local version of node.js, instead of relying on whatever I have installed by default on my system
+so, setting up environment..
+- It looks like ES13 is also ES2022; so a recent (but maybe not most current) version of node.js and all the tooling would be appropriate
+  I'll go with node.js v20; if it's older, it should still be compatible with newer javascript versions
+- I'll also go with Typescript off the bat, since it should help catch bugs and I'm familiar with it
+  - I've used a script, for personal learning projects, to set this up before; so I'll just borrow that (see my-env.sh)
+  -> updating ./go.sh
+
+Note: It shows "Installing react, react-dom, and react-scripts with cra-template-typescript..."
 
