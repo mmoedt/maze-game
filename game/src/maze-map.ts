@@ -38,7 +38,43 @@ export function getSize(): MapSize {
     return { x, y };
 }
 
-// player
-export let playerDirection = 'e'; // Start out facing east; we'll update to one of: n, e, s, w
-export let playerLocation: Coordinates = startRoom;
+export function getRoom(location: Coordinates): string {
+    const row: string[] = map[location.y];
+    const room = row[location.x];
+    return room;
+}
 
+export function getNextRoom(location: Coordinates, orientation: string): string {
+    let nextRoom = '';
+
+    let thisRoom = getRoom(location);
+    if (!thisRoom.includes(orientation)) {
+        // Sorry, no exit straightforward, so no next room
+        return ''; // default to all walls closed off
+    }
+
+    let row = [];
+
+    switch (orientation) {
+        case 'n':
+            row = map[location.y - 1];
+            nextRoom = row[location.x];
+            break;
+        case 'e':
+            row = map[location.y];
+            nextRoom = row[location.x + 1];
+            break;
+        case 's':
+            row = map[location.y + 1];
+            nextRoom = row[location.x];
+            break;
+        case 'w':
+            row = map[location.y];
+            nextRoom = row[location.x - 1];
+            break;
+        default:
+            console.warn('ERROR in getNextRoom');
+    }
+
+    return nextRoom;
+}

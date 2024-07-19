@@ -34,7 +34,9 @@ so, setting up environment..
 Note: It shows "Installing react, react-dom, and react-scripts with cra-template-typescript..."
 
 -> There are lots of warning type messages about deprecated modules .. maybe running again with a newer node.js version makes sense..? (or newer create-react-app?)
--> re-created react project, less warnings. Still has an error / warning, but I will ignore for the sake of time.  I would want to address this soon for real work
+-> switched to node.js v22
+-> re-created react project, now with less warnings.
+   Still has an error / warning, but I will ignore for the sake of time.  I would want to address this soon for real work
 
 babel-preset-react-app is part of the create-react-app project, which
 is not maintianed anymore.
@@ -67,3 +69,14 @@ Thoughts..
 - react-canvas-draw doesn't seem to fit at all what I want.. looking at the demo page, it doesn't show any line drawing
 - I found a simple example project at: https://stackblitz.com/edit/draw-line-canvas-react?file=index.js
   which might not be ideal, but should work to start with
+- took a snapshot of the sample image as a basis for what to work with for drawing (coordinates to use)
+
+To-do: Incorporate ESLint and Prettier
+
+For drawing, at the moment I'm specifying each x and y for drawing lines; it might be better to use a x,y tuple or Location type,
+and maybe keep track of the last location used, so you can simply say something like 'draw up 100 pixels' (or go up without drawing)
+
+Idea for testing: Display a list of potential rooms, onto multiple canvas elements, showing what each expected possibility should look like..
+  or maybe have an input box where the tester enters the room specs (current and next rooms) and it displays as specified
+
+I'm running out of time but really need interactivity to move on; found: https://www.npmjs.com/package/arrow-keys-react

@@ -1,13 +1,13 @@
 
 // This is meant for rendering the 3d output window,
 //  so we only care about left, stright, and right from the player's perspective
-export interface openDirs {
+export interface OpenDirs {
     left: boolean,
     straight: boolean,
     right: boolean,
 }
 
-export function getOpenDirs(room: string, orientation: string): openDirs {
+export function getOpenDirs(room: string, orientation: string): OpenDirs {
     let left: boolean;
     let right: boolean;
 

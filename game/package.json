@@ -20,6 +20,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "clean": "mv build/index.html build/index.html.old",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "serve": "serve -s build",
