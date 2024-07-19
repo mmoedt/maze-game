@@ -33,3 +33,5 @@ so, setting up environment..
 
 Note: It shows "Installing react, react-dom, and react-scripts with cra-template-typescript..."
 
+-> There are lots of warning type messages about deprecated modules .. maybe running again with a newer node.js version makes sense..? (or newer create-react-app?)
+
