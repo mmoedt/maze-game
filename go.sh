@@ -22,6 +22,7 @@ echo "Launching a chrome browser window in the background (5s delay)..."
 echo "Starting up node server to host the app..."
 (
     cd game
-    serve -s build
+    # Running via npm will set up paths and such for us
+    npm run serve
 )
 
