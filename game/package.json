@@ -1,5 +1,5 @@
 {
-  "name": "maze-game",
+  "name": "game",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,7 +10,6 @@
     "@types/node": "^16.18.103",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "npm": "^10.8.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
