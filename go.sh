@@ -1,5 +1,7 @@
 #!/bin/bash
 
+APP_URL="http://localhost:3000/index.html"
+
 echo "Setting up environment..."
 source ./my-env.sh
 nvm install  # just in case; the env script doesn't install missing versions
@@ -9,8 +11,17 @@ nvm install  # just in case; the env script doesn't install missing versions
     [ -e env.sh ] && source ./env.sh
     echo "Building the project..."
     npm run build
-)
+) &
 
-echo "Launching the project in a chrome browser window..."
-google-chrome --profile-directory="Profile Maze-Game" --new-window "${PWD}/dist/index.html"
+echo "Launching a chrome browser window in the background (5s delay)..."
+(
+    sleep 5
+    google-chrome --profile-directory="Profile MazeGame" --new-window "${APP_URL}"
+) > /dev/null 2>&1 &
+
+echo "Starting up node server to host the app..."
+(
+    cd game
+    serve -s build
+)
 

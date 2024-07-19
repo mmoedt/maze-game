@@ -34,4 +34,19 @@ so, setting up environment..
 Note: It shows "Installing react, react-dom, and react-scripts with cra-template-typescript..."
 
 -> There are lots of warning type messages about deprecated modules .. maybe running again with a newer node.js version makes sense..? (or newer create-react-app?)
+-> re-created react project, less warnings. Still has an error / warning, but I will ignore for the sake of time.  I would want to address this soon for real work
 
+babel-preset-react-app is part of the create-react-app project, which
+is not maintianed anymore.
+
+"The project was built assuming it is hosted at /"
+"You can control this with the homepage field in your package.json."
+
+# This will be different between a deployed version and a locally-running version ..
+This will need to be taken care of at some point; let's get locally working first
+
+- The build notes using "serve -s build" to run on localhost as well, with default port 3000.
+  Also found a note online about using a relative path for "homepage"; trying with that
+  -> Seems to work fine! Gives me a react welcome page
+
+-> auto-updating doesn't seem to work, I'm not sure if that's expected.  I'm fine with rerunning the server after updates
