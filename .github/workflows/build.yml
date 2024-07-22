@@ -31,3 +31,11 @@ jobs:
         npm run build
         # npm run test # TODO
         echo "GitHub build done\x21"
+
+    - name: Deploy
+      run: |
+        echo "Starting GitHub deploy.."
+        cd game
+        npm run deploy
+        echo "GitHub deploy done!"
+
