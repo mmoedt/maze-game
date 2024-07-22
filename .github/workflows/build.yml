@@ -33,9 +33,12 @@ jobs:
         echo "GitHub build done\x21"
 
     - name: Deploy
-      run: |
-        echo "Starting GitHub deploy.."
-        cd game
-        npm run deploy
-        echo "GitHub deploy done!"
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: game/build
+      # run: |
+      #   echo "Starting GitHub deploy.."
+      #   cd game
+      #   npm run deploy
+      #   echo "GitHub deploy done!"
 
