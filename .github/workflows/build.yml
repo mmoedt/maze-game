@@ -1,0 +1,33 @@
+name: NPM with NodeJS and react-scripts
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      run: |
+        echo "Starting GitHub build.."
+        cd game
+        npm install
+        npm run clean
+        npm run build
+        # npm run test # TODO
+        echo "GitHub build done\x21"
