@@ -25,6 +25,7 @@ jobs:
     - name: Build
       run: |
         echo "Starting GitHub build.."
+        cd game
         npm install
         npm run clean
         npm run build
