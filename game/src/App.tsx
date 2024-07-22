@@ -9,7 +9,7 @@ const HEIGHT = 370;
 
 function App() {
     const canvas = useRef<HTMLCanvasElement>(null);
-    let ctx: CanvasRenderingContext2D | null = null;
+    // let ctx: CanvasRenderingContext2D | null = null;
     const [location, setLocation] = useState(getStartingLocation());
     const [orientation, setOrientation] = useState(getStartingDirection());
     const [moveCount, setMoveCount] = useState(0);
@@ -27,7 +27,7 @@ function App() {
         element.width = WIDTH;
         element.height = HEIGHT;
 
-        ctx = element.getContext('2d');
+        // ctx = element.getContext('2d');
 
         // Configure element for receiving keypresses
         element.focus();
@@ -41,7 +41,7 @@ function App() {
             console.warn("ERROR: element is not defined, as was expected!");
             return;
         }
-        ctx = element.getContext('2d');
+        const ctx: CanvasRenderingContext2D | null = element.getContext('2d');
 
         // drawTestLines(ctx);
         console.log(`Drawing the current room..`)
