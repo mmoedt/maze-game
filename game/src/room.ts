@@ -28,7 +28,7 @@ export function getOpenDirs(room: string, orientation: string): OpenDirs {
             right = room.includes('w');
             break;
         case 'w':
-            left = room.includes('w');
+            left = room.includes('s');
             right = room.includes('n');
             break;
         default:

@@ -1,4 +1,4 @@
-import { getNextRoom, getRoom } from "./maze-map";
+import { endRoom, getNextRoomExits, getNextRoomLocation, getRoom } from "./maze-map";
 import { getLocation, getOrientation } from "./player";
 import { getOpenDirs, OpenDirs } from "./room";
 
@@ -25,13 +25,36 @@ function drawLine(x1: number, y1: number, x2: number, y2: number, strokeStyle = 
     ctx.stroke();
 }
 
+
+function drawWall(x1: number, y1: number, x2: number, y2: number, fillStyle = 'white') {
+    if (ctx == null) {
+        console.warn("ERROR: Missing drawing context!");
+        return;
+    }
+    console.log(`Drawing wall using: ${{x1, y1, x2, y2}}`);
+    const width = x2 - x1; // Assume for now we're going top-left to bottom-right
+    const height = y2 - y1;
+
+    ctx.fillStyle = fillStyle;
+    ctx.fillRect(x1, y1, width, height);
+}
+
 export function drawTestLines(newCtx: CanvasRenderingContext2D | null) {
     ctx = newCtx;
     drawLine(20, 20, 20, 100);
 }
 
-function drawBorder() {
+function clearView(): void {
+    if (ctx == null) {
+        console.warn("ERROR: Missing drawing context!");
+        return;
+    }
+    ctx.clearRect(0, 0, X, Y);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, X, Y);
+}
 
+function drawBorder() {
     // Start with a border around the entire canvas:
     drawLine(0, 0, X, 0); // top
     drawLine(0, 0, 0, Y); // left
@@ -48,6 +71,7 @@ const testValues = {
 export function drawRoomsView(newCtx: CanvasRenderingContext2D | null) {
     ctx = newCtx;
 
+    clearView();
     drawBorder();
 
     const currentLocation = getLocation();
@@ -55,13 +79,19 @@ export function drawRoomsView(newCtx: CanvasRenderingContext2D | null) {
     const orientation = getOrientation();
 
     const openDirs: OpenDirs = getOpenDirs(exits, orientation);
-    console.log(`Current state: '${JSON.stringify({exits, orientation, currentLocation})}'`);
+    console.log(`Current state: '${JSON.stringify({exits, orientation, currentLocation, openDirs})}'`);
 
     // Current room, floor - for now always filled
-    drawLine(100, 300, 0, Y);
-    drawLine(100, 300, 510, 300);
-    drawLine(510, 300, 600, Y);
-
+    if (currentLocation.x === endRoom.x && currentLocation.y === endRoom.y) {
+        // Draw the end room differently
+        drawLine(100, 300, 0, Y, 'green');
+        drawLine(100, 300, 510, 300, 'green');
+        drawLine(510, 300, 600, Y, 'green');
+    } else {
+        drawLine(100, 300, 0, Y);
+        drawLine(100, 300, 510, 300);
+        drawLine(510, 300, 600, Y);
+    }
 
     // Current room, left wall
     if (!openDirs.left) {
@@ -88,20 +118,33 @@ export function drawRoomsView(newCtx: CanvasRenderingContext2D | null) {
     const roomInfront: boolean = openDirs.straight;
 
     if (!roomInfront || testValues.wallInfront) {
-        drawLine(100, 75, 510, 75, 'red');
+        if (currentLocation.x === endRoom.x && currentLocation.y === endRoom.y) {
+            drawLine(100, 75, 510, 75, 'green');
+            drawWall(100, 75, 510, 300, 'green');
+        } else {
+            drawLine(100, 75, 510, 75, 'red');
+            drawWall(100, 75, 510, 300, 'gray');
+        }
         // And then end rendering - there are no more rooms to worry about
         return;
     }
 
-    const nextRoomExits = getNextRoom(currentLocation, orientation);
+    const nextRoomExits = getNextRoomExits(currentLocation, orientation);
+    const nextRoomLocation = getNextRoomLocation(currentLocation, orientation);
 
     const nextOpenDirs = getOpenDirs(nextRoomExits, orientation);
 
     // Next room, floor
     // To-do: What if the room in front is the exit?  Make the floor green!
-    drawLine(100, 300, 180, 250);
-    drawLine(180, 250, 420, 250);
-    drawLine(420, 250, 510, 300);
+    if (nextRoomLocation.x === endRoom.x && nextRoomLocation.y === endRoom.y) {
+        drawLine(100, 300, 180, 250, 'green');
+        drawLine(180, 250, 420, 250, 'green');
+        drawLine(420, 250, 510, 300, 'green');
+    } else {
+        drawLine(100, 300, 180, 250);
+        drawLine(180, 250, 420, 250);
+        drawLine(420, 250, 510, 300);
+    }
 
     //Next room, left wall
     if (!nextOpenDirs.left || testValues.nextLeftClosed) {
@@ -126,8 +169,15 @@ export function drawRoomsView(newCtx: CanvasRenderingContext2D | null) {
     }
 
     if (!nextOpenDirs.straight) {
-        drawLine(180, 120, 420, 120, 'red');
-        // Red line indicates there's a wall
+        if (nextRoomLocation.x === endRoom.x && nextRoomLocation.y === endRoom.y) {
+            // Red line indicates there's a wall
+            drawLine(180, 120, 420, 120, 'green');
+            drawWall(180, 120, 420, 250, 'green');
+        } else {
+            // Red line indicates there's a wall that's not the exit
+            drawLine(180, 120, 420, 120, 'red');
+            drawWall(180, 120, 420, 250, 'gray');
+        }
         // To-do: fill a rectangle on the wall instead of a simple line..
     }
 

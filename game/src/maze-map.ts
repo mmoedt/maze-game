@@ -3,6 +3,7 @@
 //  2-d array; array of rows, first row is most north, first subentry is most west.
 //  the letters indicate which directions are open for traversal
 //  (e.g. 'nesw' all ways open, '' for a room you're stuck in, 'ew' for east and west open)
+
 //  (note: this may allow one-way 'doors')
 export const map: string[][] = [
     ['e', 'ew', 'esw', 'sw'], // first entry is the start
@@ -44,37 +45,55 @@ export function getRoom(location: Coordinates): string {
     return room;
 }
 
-export function getNextRoom(location: Coordinates, orientation: string): string {
-    let nextRoom = '';
+interface nextRoom {
+    exits: string,
+    nextLocation: Coordinates,
+}
+
+export function getNextRoom(location: Coordinates, orientation: string): nextRoom {
+    let exits = '';
+    let next: Coordinates = { ...location };
 
     let thisRoom = getRoom(location);
     if (!thisRoom.includes(orientation)) {
         // Sorry, no exit straightforward, so no next room
-        return ''; // default to all walls closed off
+        return { exits: '', nextLocation: location }; // default to all walls closed off
     }
 
     let row = [];
+    let x = location.x;
+    let y = location.y;
 
     switch (orientation) {
         case 'n':
-            row = map[location.y - 1];
-            nextRoom = row[location.x];
+            next = { y: y - 1, x };
             break;
         case 'e':
-            row = map[location.y];
-            nextRoom = row[location.x + 1];
+            next = { y, x: x + 1 };
+
             break;
         case 's':
-            row = map[location.y + 1];
-            nextRoom = row[location.x];
+            next = { y: y + 1, x };
             break;
         case 'w':
-            row = map[location.y];
-            nextRoom = row[location.x - 1];
+            next = { y, x: x - 1 };
             break;
         default:
             console.warn('ERROR in getNextRoom');
     }
 
-    return nextRoom;
+    row = map[next.y];
+    exits = row[next.x];
+
+    return { exits, nextLocation: next };
+}
+
+export function getNextRoomExits(location: Coordinates, orientation: string): string {
+    const nextRoom = getNextRoom(location, orientation);
+    return nextRoom.exits;
+}
+
+export function getNextRoomLocation(location: Coordinates, orientation: string): Coordinates {
+    const nextRoom = getNextRoom(location, orientation);
+    return nextRoom.nextLocation;
 }

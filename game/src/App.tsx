@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useRef, useState } from 'react';
+// import logo from './logo.svg'; // From create-react-app
 import './App.css';
-import { drawRoomsView, drawTestLines } from './roomView';
-// import ArrowKeysReact from 'arrow-keys-react';
+import { drawRoomsView } from './roomView';
+import { getLocation, getOrientation, getStartingDirection, getStartingLocation, tryGoStraight, turnAround, turnLeft, turnRight } from './player';
 
 const WIDTH = 600;
 const HEIGHT = 370;
@@ -10,6 +10,9 @@ const HEIGHT = 370;
 function App() {
     const canvas = useRef<HTMLCanvasElement>(null);
     let ctx: CanvasRenderingContext2D | null = null;
+    const [location, setLocation] = useState(getStartingLocation());
+    const [orientation, setOrientation] = useState(getStartingDirection());
+    const [moveCount, setMoveCount] = useState(0);
 
     useEffect(() => {
         let element = canvas.current;
@@ -26,36 +29,97 @@ function App() {
 
         ctx = element.getContext('2d');
 
-        // ArrowKeysReact.config({
-        //     left: () => {
-        //       console.log('left key detected.');
-        //     },
-        //     right: () => {
-        //       console.log('right key detected.');
-        //     },
-        //     up: () => {
-        //       console.log('up key detected.');
-        //     },
-        //     down: () => {
-        //       console.log('down key detected.');
-        //     }
-        //   });
+        // Configure element for receiving keypresses
+        element.focus();
+
     }, []);
 
     useEffect(() => {
+        const element = canvas.current;
+        // Quick check to make sure element is defined..
+        if (!element) {
+            console.warn("ERROR: element is not defined, as was expected!");
+            return;
+        }
+        ctx = element.getContext('2d');
+
         // drawTestLines(ctx);
+        console.log(`Drawing the current room..`)
         drawRoomsView(ctx);
-    }, [ctx]);
+    }, [location, orientation, moveCount]);
+
+    const processKeys: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+        const keyPressed = e?.key;
+        console.log(`Got keyboard event with ${{keyPressed,}}`, e);
+
+        // These are updated the switch below; here are the defaults
+        let updateState = true;
+        let keyHandled = true;
+
+        switch (keyPressed) {
+            case 'ArrowUp':
+            case 'w':
+            case 'W': // shift or with caps lock is fine
+                tryGoStraight();
+                break;
+
+            case 'ArrowRight':
+            case 'D':
+                turnRight();
+                break;
+
+            case 'ArrowDown':
+            case 's':
+            case 'S':
+                turnAround();
+                break;
+
+            case 'ArrowLeft':
+            case 'a':
+            case 'A':
+                turnLeft();
+                break;
+
+            default:
+                console.log('Unhandled key..');
+                // updateState = false;
+                keyHandled = false;
+                break;
+        }
+
+        if (updateState) {
+            const newLocation = getLocation();
+            // Update the react state in case we've moved or turned
+            setOrientation(getOrientation());
+            setLocation({ ...newLocation });
+            setMoveCount(moveCount + 1);
+        }
+
+        if (keyHandled) {
+            e.preventDefault(); // We don't need to propogate this keypress if we've handled it
+        }
+    };
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Greetings, fellow travelers.  Please prepare for the Maze Game!!
+          Greetings, fellow travelers.  Please prepare for the Maze Game!!<br></br>
+          Page load time: ${(new Date()).toISOString()}
+          <p>
+          Please focus (click) on the room view, and use the arrow keys or WASD to make your way through!
+          </p>
         </p>
-        <canvas ref={canvas}></canvas>
-        {/* <div {...ArrowKeysReact.events} tabIndex="1"></div> */}
+        {/* <p>
+            Location: {JSON.stringify({x: location.x, y: location.y})}
+        </p> */}
+        <p>
+            Move count score (lower is better): {moveCount}<br></br>
+        </p>
+        <div tabIndex={1} id="gameContainer" onKeyDown={processKeys}>
+            <canvas ref={canvas}></canvas>
+            {/* <div {...ArrowKeysReact.events} tabIndex="1"></div> */}
+        </div>
       </header>
     </div>
   );

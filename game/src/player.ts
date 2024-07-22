@@ -1,62 +1,111 @@
-import { Coordinates, startRoom } from "./maze-map";
+import { Coordinates, getRoom, getSize, startRoom } from "./maze-map";
+import { getOpenDirs, OpenDirs } from "./room";
 
-export let playerDirection = 'e'; // Start out facing east; we'll update to one of: n, e, s, w
-export let playerLocation: Coordinates = startRoom;
+const startDirection = 'e';
+
+let orientation = startDirection; // Start out facing east; we'll update to one of: n, e, s, w
+let location: Coordinates = startRoom;
 
 export function getOrientation(): string {
-    return playerDirection;
+    return orientation;
 }
 
 export function getLocation(): Coordinates {
-    return playerLocation;
+    return { ...location };
+}
+
+export function getStartingDirection(): string {
+    return startDirection;
+}
+
+export function getStartingLocation(): Coordinates {
+    return { ...startRoom };
+}
+
+function locationString(loc: Coordinates = location): string {
+    return `x: ${loc.x}, y: ${loc.y}`;
 }
 
 export function tryGoStraight() {
+    console.log('Trying to go straight..');
+
+    const currentLocation = getLocation();
+    const roomExits = getRoom(currentLocation);
+    const orientation = getOrientation();
+    const openDirs: OpenDirs = getOpenDirs(roomExits, orientation);
+    const newLocation = { x: location.x, y: location.y }; // Create a new var so that changes are seen
+    const mapSize = getSize();
+
+    // Return early if we can't go straight
+    if (!openDirs?.straight) {
+        console.log('Straight is not an open direction! Not moving or doing anything.');
+        return;
+    }
+
     // FIXME: need to verify there's an open exit in our current direction
     //  (and maybe that we're not outside the grid; in case there's a problem with the map definition?)
 
-    switch (playerDirection) {
+    switch (orientation) {
         case 'n':
-            playerLocation.y--;
+            newLocation.y--;
             break;
         case 'e':
-            playerLocation.x++;
+            newLocation.x++;
             break;
         case 's':
-            playerLocation.y++;
+            newLocation.y++;
             break;
         case 'w':
-            playerLocation.x--;
+            newLocation.x--;
             break;
         default:
             console.warn('ERROR: Unsupported player orientation; cannot go straight');
             break;
     }
-    if (playerLocation.x < 0) {
-        playerLocation.x = 0;
+
+    // TODO: Put these checks in the switch above?
+    if (newLocation.x <= 0) {
+        console.log('Hit beginning of the map, X coord');
+        newLocation.x = 0;
     }
-    if (playerLocation.y < 0) {
-        playerLocation.y = 0;
+    if (newLocation.y < 0) {
+        console.log('Hit beginning of the map, X coord');
+        newLocation.y = 0;
     }
+    if (newLocation.x >= mapSize.x) {
+        console.log('Hit end of the map, X coord');
+        newLocation.x = mapSize.x - 1;
+    }
+    if (newLocation.y >= mapSize.y) {
+        console.log('Hit end of the map, Y coord');
+        newLocation.y = mapSize.y - 1;
+    }
+
+    console.log(`Updating location: old: [${locationString()}], new: [${locationString(newLocation)}]`);
+    location = newLocation;
 }
 
 export function turnLeft() {
-    const old = playerDirection;
-    playerDirection = (
+    console.log('Turning left..');
+
+    const old = orientation;
+    orientation = (
         old === 'n' ? 'w' :
-        old === 'e' ? 'n' :
-        old === 's' ? 'w' :
         old === 'w' ? 's' :
+        old === 's' ? 'e' :
+        old === 'e' ? 'n' :
         old
     );
 }
 
 export function turnRight() {
-    const old = playerDirection;
-    playerDirection = (
+    console.log('Turning right..');
+
+    const old = orientation;
+    orientation = (
         old === 'n' ? 'e' :
         old === 'e' ? 's' :
-        old === 's' ? 'e' :
+        old === 's' ? 'w' :
         old === 'w' ? 'n' :
         old
     );
@@ -64,8 +113,10 @@ export function turnRight() {
 }
 
 export function turnAround() {
-    const old = playerDirection;
-    playerDirection = (
+    console.log('Turning aroumd..');
+
+    const old = orientation;
+    orientation = (
         old === 'n' ? 's' :
         old === 'e' ? 'w' :
         old === 's' ? 'n' :

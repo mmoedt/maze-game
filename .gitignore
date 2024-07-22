@@ -6,3 +6,5 @@ google-chrome
 
 # Environment non-source, non-config files:
 .nvm
+Code
+*.code-workspace
