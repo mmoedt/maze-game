@@ -1,6 +1,6 @@
 {
   "name": "game",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "private": true,
   "homepage": ".",
@@ -21,7 +21,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "clean": "mv build/index.html build/index.html.old",
+    "clean": "[ -e build/index.html ] && mv build/index.html build/index.html.old",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "serve": "serve -s build",

@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: NPM with NodeJS and react-scripts
 
 on:
   push:
