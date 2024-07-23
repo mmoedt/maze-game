@@ -13,6 +13,7 @@ function App() {
     const [location, setLocation] = useState(getStartingLocation());
     const [orientation, setOrientation] = useState(getStartingDirection());
     const [moveCount, setMoveCount] = useState(0);
+    const [lastAction, setLastAction] = useState(''); // helpful text for user orientation
 
     useEffect(() => {
         let element = canvas.current;
@@ -61,28 +62,33 @@ function App() {
             case 'w':
             case 'W': // shift or with caps lock is fine
                 tryGoStraight();
+                setLastAction('Proceeded straight');
                 break;
 
             case 'ArrowRight':
             case 'D':
+            case 'd':
                 turnRight();
+                setLastAction('Turned right');
                 break;
 
             case 'ArrowDown':
             case 's':
             case 'S':
                 turnAround();
+                setLastAction('Turned around');
                 break;
 
             case 'ArrowLeft':
             case 'a':
             case 'A':
                 turnLeft();
+                setLastAction('Turned left');
                 break;
 
             default:
                 console.log('Unhandled key..');
-                // updateState = false;
+                updateState = false;
                 keyHandled = false;
                 break;
         }
@@ -110,9 +116,10 @@ function App() {
           Please focus (click) on the room view, and use the arrow keys or WASD to make your way through!
           </p>
         </p>
-        {/* <p>
-            Location: {JSON.stringify({x: location.x, y: location.y})}
-        </p> */}
+        <p>
+            Location: x: {location.x}, y: {location.y}, heading: {orientation}<br></br>
+            {lastAction ? `Your last action: ${lastAction}` : ''}
+        </p>
         <p>
             Move count score (lower is better): {moveCount}<br></br>
         </p>
