@@ -26,7 +26,7 @@ function locationString(loc: Coordinates = location): string {
     return `x: ${loc.x}, y: ${loc.y}`;
 }
 
-export function tryGoStraight() {
+export function tryGoStraight(): boolean {
     console.log('Trying to go straight..');
 
     const currentLocation = getLocation();
@@ -35,11 +35,12 @@ export function tryGoStraight() {
     const openDirs: OpenDirs = getOpenDirs(roomExits, orientation);
     const newLocation = { x: location.x, y: location.y }; // Create a new var so that changes are seen
     const mapSize = getSize();
+    let didMove = false;
 
     // Return early if we can't go straight
     if (!openDirs?.straight) {
         console.log('Straight is not an open direction! Not moving or doing anything.');
-        return;
+        return false;
     }
 
     // FIXME: need to verify there's an open exit in our current direction
@@ -48,15 +49,19 @@ export function tryGoStraight() {
     switch (orientation) {
         case 'n':
             newLocation.y--;
+            didMove = true;
             break;
         case 'e':
             newLocation.x++;
+            didMove = true;
             break;
         case 's':
             newLocation.y++;
+            didMove = true;
             break;
         case 'w':
             newLocation.x--;
+            didMove = true;
             break;
         default:
             console.warn('ERROR: Unsupported player orientation; cannot go straight');
@@ -83,6 +88,8 @@ export function tryGoStraight() {
 
     console.log(`Updating location: old: [${locationString()}], new: [${locationString(newLocation)}]`);
     location = newLocation;
+
+    return didMove;
 }
 
 export function turnLeft() {
