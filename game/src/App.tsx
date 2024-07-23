@@ -56,12 +56,13 @@ function App() {
         // These are updated the switch below; here are the defaults
         let updateState = true;
         let keyHandled = true;
+        let didMove = true;
 
         switch (keyPressed) {
             case 'ArrowUp':
             case 'w':
             case 'W': // shift or with caps lock is fine
-                tryGoStraight();
+                didMove = tryGoStraight();
                 setLastAction('Proceeded straight');
                 break;
 
@@ -98,7 +99,9 @@ function App() {
             // Update the react state in case we've moved or turned
             setOrientation(getOrientation());
             setLocation({ ...newLocation });
-            setMoveCount(moveCount + 1);
+            if (didMove) {
+                setMoveCount(moveCount + 1);
+            }
         }
 
         if (keyHandled) {
