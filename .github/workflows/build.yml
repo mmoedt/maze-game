@@ -1,5 +1,11 @@
 name: NPM with NodeJS and react-scripts
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   push:
     branches: [ "main" ]
@@ -8,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
@@ -17,28 +23,52 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Setup Node.js v${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build
+    # based on example from: https://github.com/pmndrs/website/blob/main/.github/workflows/pages.yml
+    # and https://github.com/actions/starter-workflows/blob/main/pages/nextjs.yml
+    - name: configure_github_pages
+      id: configurepages
+      uses: actions/configure-pages@v5
+
+    - name: build
       run: |
         echo "Starting GitHub build.."
         cd game
-        npm install
+        npm ci
         npm run clean
         npm run build
         # npm run test # TODO
         echo "GitHub build done\x21"
 
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4
+    - uses: actions/upload-pages-artifact@v3
       with:
-        folder: game/build
-      # run: |
-      #   echo "Starting GitHub deploy.."
-      #   cd game
-      #   npm run deploy
-      #   echo "GitHub deploy done!"
+        path: ./game/build
+
+    # - name: deployTwo
+    #   uses: peaceiris/actions-gh-pages@v4
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     publish_dir: ./game/build
+
+  # based on example from: https://github.com/pmndrs/website/blob/main/.github/workflows/pages.yml
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # permissions for peaceiris/...
+    # permissions:
+    #   contents: write
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - name: deployment_to_github_pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+# EOF
+
 
